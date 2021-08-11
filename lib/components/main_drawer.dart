@@ -4,6 +4,8 @@ import 'package:pataka/screens/contas.dart';
 import 'package:pataka/screens/fixas.dart';
 import 'package:pataka/screens/inicio.dart';
 
+// Esta classe representa o Drawer do aplicativo.
+// Ela é utilizada por todas as telas principais.
 class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,7 @@
 import 'model.dart';
 
+// Esta classe representa o modela da categoria.
+// A interface Model é utilizada no DAO.
 class Categoria implements Model {
   int? id;
   String nome;

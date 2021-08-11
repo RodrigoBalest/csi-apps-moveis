@@ -1,6 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+// Esta classe realiza as operações com o banco de dados.
 class DB {
   static const int _version = 1;
 

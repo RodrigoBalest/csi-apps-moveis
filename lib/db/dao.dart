@@ -2,8 +2,15 @@ import 'package:pataka/db/db.dart';
 import 'package:pataka/models/model.dart';
 import 'package:sqflite/sqflite.dart';
 
+// Esta classe é um DAO genérico que pode ser usado
+// para diversos models estendendo-a.
 abstract class Dao<M extends Model> {
+
+  // Armazena o nome da tabela que o Model pertence.
   final String table;
+
+  // Este método é usado para criar uma nova instância de Model
+  // a partir de um Map<String, dynamic>.
   final M Function(Map<String, dynamic>) fromMapCreator;
 
   Dao({required this.table, required this.fromMapCreator});
