@@ -43,4 +43,9 @@ abstract class Dao<M extends Model> {
     final db = await DB.getDB();
     await db.delete(table, where: 'id = ?', whereArgs: [model.getId()]);
   }
+
+  void deleteFromId(int id) async {
+    final db = await DB.getDB();
+    await db.delete(table, where: 'id = ?', whereArgs: [id]);
+  }
 }
