@@ -33,6 +33,7 @@ dependencies:
   intl: ^0.17.0
   flutter_colorpicker: ^0.4.0
   flutter_iconpicker: ^3.0.2
+  flutter_svg: ^0.22.0
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +54,15 @@ flutter:
   assets:
     - imagens/logo.png
     - imagens/logo-inv.png
+    - logos/carteira.svg
+    - logos/banrisul.svg
+    - logos/bb.svg
+    - logos/caixa.svg
+    - logos/itau.svg
+    - logos/mastercard.svg
+    - logos/nubank.svg
+    - logos/santander.svg
+    - logos/sicredi.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
