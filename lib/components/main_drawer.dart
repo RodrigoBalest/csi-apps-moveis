@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pataka/screens/categorias.dart';
 import 'package:pataka/screens/contas.dart';
+import 'package:pataka/screens/movimentacoes.dart';
 import 'package:pataka/screens/fixas.dart';
 import 'package:pataka/screens/inicio.dart';
 
@@ -21,6 +22,15 @@ class MainDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => Inicio()));
+            },
+          ),
+          ListTile(
+            title: Text('Movimentações'),
+            leading: Icon(Icons.compare_arrows),
+            onTap: () {
+              DateTime now = DateTime.now();
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Movimentacoes(now.year, now.month)));
             },
           ),
           ListTile(

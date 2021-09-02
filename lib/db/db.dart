@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 // Esta classe realiza as operações com o banco de dados.
 class DB {
-  static const int _version = 2;
+  static const int _version = 3;
 
   static void _onCreate(db, version) async {
     var batch = db.batch();
@@ -16,6 +16,16 @@ class DB {
     var batch = db.batch();
     if (oldVersion == 1) {
       batch.execute('CREATE TABLE contas (id INTEGER PRIMARY KEY, nome TEXT, icone TEXT, valor_inicial REAL)');
+    }
+    if (oldVersion <= 2) {
+      batch.execute('CREATE TABLE movimentacoes ('
+          'id INTEGER PRIMARY KEY, '
+          'nome TEXT, '
+          'valor REAL, '
+          'vencimento TEXT, '
+          'categoria_id INTEGER, '
+          'conta_origem_id INTEGER, '
+          'conta_destino_id, INTEGER)');
     }
     await batch.commit();
   }
