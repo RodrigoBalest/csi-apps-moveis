@@ -3,8 +3,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ContaIconeSelector extends StatefulWidget {
   String _selected;
+  Function _onSelected;
 
-  ContaIconeSelector(this._selected);
+  ContaIconeSelector({required selected, required onSelected}):
+        _selected = selected,
+        _onSelected = onSelected;
 
   String getSelected() {
     return _selected;
@@ -15,22 +18,15 @@ class ContaIconeSelector extends StatefulWidget {
   }
 
   @override
-  _ContaIconeSelectorState createState() => _ContaIconeSelectorState(_selected);
+  _ContaIconeSelectorState createState() => _ContaIconeSelectorState();
 }
 
 class _ContaIconeSelectorState extends State<ContaIconeSelector> {
-  String _selected;
-
-  _ContaIconeSelectorState(this._selected);
-
-  String getSelected() {
-    return _selected;
-  }
 
   setSelected(String value) {
     setState(() {
-      _selected = value;
       widget.setSelected(value);
+      widget._onSelected(value);
     });
   }
 
@@ -61,7 +57,7 @@ class _ContaIconeSelectorState extends State<ContaIconeSelector> {
 
 Widget _makeIcone(String id, _ContaIconeSelectorState state) {
   return Opacity(
-    opacity: state.getSelected() == id ? 1 : 0.25,
+    opacity: state.widget.getSelected() == id ? 1 : 0.25,
     child: GestureDetector(
       child: SvgPicture.asset('logos/' + id + '.svg'),
       onTap: () {

@@ -118,15 +118,24 @@ class _MovimentacoesState extends State<Movimentacoes> {
 
     return Column(
         children: [
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _btnAnterior(),
-              Text(nomeMes, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              _btnProximo()
-            ],
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.white54
+                )
+              )
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _btnAnterior(),
+                Text(nomeMes, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                _btnProximo()
+              ],
+            ),
           ),
+          Divider(height: 1,),
           _futureBuilderMovimentacoes()
         ],
       );
@@ -184,28 +193,19 @@ class _MovimentacoesState extends State<Movimentacoes> {
                   ],
                 ),
               );
-              break;
           // Constroi a lista com widgets para as categorias.
             case ConnectionState.done:
               final List<Movimentacao>? movs = snapshot.data;
               // Se não houverem movimentações, exibe uma mensagem para o usuário.
               if (movs == null || movs.length == 0) {
-                return Center(
-                  child: Text('Nenhuma movimentação encontrada.'),
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text('Nenhuma movimentação encontrada.'),
+                  ),
                 );
               }
-              // Retorna um ListView com um widget para cada categoria.
-              return SingleChildScrollView(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: movs.length,
-                  itemBuilder: (context, index) {
-                    final Movimentacao mov = movs[index];
-                    return MovimentacaoListItem(mov, this);
-                  },
-                ),
-              );
-              break;
+              return Expanded(child: _listaMovimentacoes(movs));
           // Em outros casos, exibe no log.
             default:
               debugPrint(snapshot.connectionState.toString());
@@ -213,6 +213,58 @@ class _MovimentacoesState extends State<Movimentacoes> {
           }
           return Text('Problemas ao gerar a lista de categorias.');
         }
+    );
+  }
+
+  // Retorna um ListView com um widget para cada categoria.
+  Widget _listaMovimentacoes(List<Movimentacao> movs) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: movs.length + 1,
+      itemBuilder: (context, index) {
+        if (index < movs.length) {
+          final Movimentacao mov = movs[index];
+          return MovimentacaoListItem(mov, this);
+        }
+        return _somatorioMovs(movs);
+      },
+    );
+  }
+
+  Widget _somatorioMovs(List<Movimentacao> movs) {
+    final fmt = NumberFormat.simpleCurrency(locale: 'pt_BR');
+
+    double total = 0;
+    movs.forEach((mov) {
+      if (mov.contaOrigemId != null) {
+        total -= mov.valor;
+      } else if (mov.contaDestinoId != null) {
+        total += mov.valor;
+      }
+    });
+
+    Color curColor = Colors.grey;
+    if (total > 0) curColor = Colors.green;
+    if (total < 0) curColor = Colors.red;
+
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text('Total: ',
+            style: TextStyle(fontWeight: FontWeight.bold)
+          ),
+          Text(fmt.format(total),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: curColor,
+              fontSize: 20
+            ),
+          )
+        ]
+      ),
     );
   }
 }
@@ -229,7 +281,9 @@ class MovimentacaoListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fmt = NumberFormat.simpleCurrency(locale: 'pt_BR');
+    final curFmt = NumberFormat.simpleCurrency(locale: 'pt_BR');
+    final dayFmt = DateFormat('d - E');
+    Color curColor = _mov.contaOrigemId != null ? Colors.red : Colors.green;
 
     // Cria os dados e as cores para o ícone da categoria.
     IconData iconData = IconData(int.parse(_mov.categoria.icone), fontFamily: 'MaterialIcons');
@@ -247,13 +301,19 @@ class MovimentacaoListItem extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          contentPadding: EdgeInsets.fromLTRB(20, 10, 10, 5),
+          contentPadding: EdgeInsets.fromLTRB(20, 0, 10, 0),
           leading: iconAvatar,
           title: Text(_mov.nome),
-          subtitle: Text(fmt.format(_mov.valor)),
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(curFmt.format(_mov.valor), style: TextStyle(color: curColor)),
+              Text(dayFmt.format(DateTime.parse(_mov.vencimento)))
+            ],
+          ),
           trailing: _menu(context, _state, _mov),
         ),
-        Divider()
+        Divider(height: 1,)
       ],
     );
   }

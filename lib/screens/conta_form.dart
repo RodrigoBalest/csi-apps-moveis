@@ -79,7 +79,14 @@ class _ContaFormState extends State<ContaForm> {
                   padding: EdgeInsets.only(top: 10, bottom: 10),
                   child: Text('Ícone')
               ),
-              ContaIconeSelector(_icone),
+              ContaIconeSelector(
+                  selected: _icone,
+                  onSelected: (val) {
+                    setState(() {
+                      _icone = val;
+                    });
+                  },
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 24),
                 // Exibe o botão que salva as edições caso o nome seja válido.

@@ -1,5 +1,3 @@
-import 'package:pataka/db/categoria_dao.dart';
-import 'package:pataka/db/conta_dao.dart';
 import 'package:pataka/models/categoria.dart';
 
 import 'conta.dart';
@@ -19,9 +17,6 @@ class Movimentacao implements Model {
   late Conta? contaOrigem;
   late Conta? contaDestino;
 
-  CategoriaDao _categoriaDao = new CategoriaDao();
-  ContaDao _contaDao = new ContaDao();
-
   Movimentacao({
     this.id,
     required this.nome,
@@ -30,9 +25,7 @@ class Movimentacao implements Model {
     required this.categoriaId,
     this.contaOrigemId,
     this.contaDestinoId
-  }): categoria = Categoria(cor: '', icone: '', nome: '') {
-    setRelations();
-  }
+  });
 
   Movimentacao.fromMap(Map<String, dynamic> map):
       id = map['id'],
@@ -41,20 +34,7 @@ class Movimentacao implements Model {
       vencimento = map['vencimento'],
       categoriaId = map['categoria_id'],
       contaOrigemId = map['conta_origem_id'],
-      contaDestinoId = map['conta_destino_id'],
-      categoria = Categoria(cor: '', icone: '', nome: '') {
-    setRelations();
-  }
-
-  Future<void> setRelations() async {
-    categoria = (await _categoriaDao.get(categoriaId))!;
-    if (contaOrigemId != null) {
-      contaOrigem = await _contaDao.get(contaOrigemId!);
-    }
-    if (contaDestinoId != null) {
-      contaDestino = await _contaDao.get(contaDestinoId!);
-    }
-  }
+      contaDestinoId = map['conta_destino_id'];
 
   @override
   int? getId() {
